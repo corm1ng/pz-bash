@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mkdir /tmp/archive
+sudo tar cpf /tmp/archive/home-backup-$(date +%d-%m-%Y).tar --absolute-names /home/test
+sudo tar cpf /tmp/archive/ssh-backup-$(date +%d-%m-%Y).tar --absolute-names /etc/ssh/sshd_config
+sudo tar cpf /tmp/archive/rdp-backup-$(date +%d-%m-%Y).tar --absolute-names /etc/xrdp/xrdp.ini
+sudo tar cpf /tmp/archive/ftp-backup-$(date +%d-%m-%Y).tar --absolute-names /etc/vsftpd.conf
+ 
