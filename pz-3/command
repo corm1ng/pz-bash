@@ -1,0 +1,4 @@
+
+logwatch --detail Med --mailto root --service sshd --range yesterday
+logwatch --detail Med --mailto root --service xrdp --range yesterday
+logwatch --detail Med --mailto root --service vsftpd --range yesterday
