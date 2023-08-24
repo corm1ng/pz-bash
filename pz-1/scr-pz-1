@@ -1,0 +1,97 @@
+#!/bin/bash
+
+SETCOLOR_SUCCESS="echo -en \\033[1;32m"
+SETCOLOR_FAILURE="echo -en \\033[1;31m"
+SETCOLOR_WARNING="echo -en \\033[1;33m"
+SETCOLOR_NORMAL="echo -en \\033[0;39m"
+
+function check_repo {
+  repo_file=./sources.list
+  repo_string="deb http://archive.ubuntu.com/ubuntu release-backports main restricted universe multiverse"
+  if grep -qFx "$repo_string" $repo_file
+    then 
+        ${SETCOLOR_SUCCESS}; printf "[LOG] Task 1: "; ${SETCOLOR_NORMAL}; echo "Repo backports string exist!"
+  else
+    ${SETCOLOR_FAILURE}; printf "[LOG] Task 1: "; ${SETCOLOR_NORMAL}; echo "Repo backports did not find string, adding."; ${SETCOLOR_NORMAL}
+    echo $repo_string >> $repo_file
+  fi
+}
+function check_apache2 {
+  sudo apt install apache2 -y
+  sudo systemctl start apache2
+  echo "---------------------------------------------------------"
+  if systemctl status apache2 | grep -q "running"
+    then 
+        ${SETCOLOR_SUCCESS}; printf "[LOG] Task 3: "; ${SETCOLOR_NORMAL}; echo "Apache web server is installed and running."
+  else
+        ${SETCOLOR_FAILURE}; printf "[LOG] Task 3: "; ${SETCOLOR_NORMAL}; echo "Apache web server is not running. There may be a problem, check the logs:"; ${SETCOLOR_NORMAL};
+        systemctl status apache2
+  fi
+}
+function check_ssh {
+  sudo apt install ssh -y
+  sudo systemctl start sshd
+  echo "---------------------------------------------------------"
+  if systemctl status sshd | grep -q "running"
+    then 
+        ${SETCOLOR_SUCCESS}; printf "[LOG] Task 5: "; ${SETCOLOR_NORMAL}; echo "SSH server is installed and running."
+  else
+        ${SETCOLOR_FAILURE}; printf "[LOG] Task 5: "; ${SETCOLOR_NORMAL}; echo "SSH is not running. There may be a problem, check the logs:"; ${SETCOLOR_NORMAL}
+        systemctl status sshd
+  fi
+}
+function gen_pass {
+  ${SETCOLOR_SUCCESS}; printf "[LOG] Task 6: "; ${SETCOLOR_NORMAL}; echo "Generating random passwords."
+  for digit in 1 2 3 4 5
+  do 
+  < /dev/urandom tr -dc '[:punct:][:alnum:]' | head -c${1:-16};echo;
+  done
+  echo "---------------------------------------------------------"
+}
+echo "---------------------------------------------------------"
+${SETCOLOR_WARNING}; echo "Getting started with the script from practical task №1"; ${SETCOLOR_NORMAL}
+echo "---------------------------------------------------------"
+
+# Task 1
+check_repo
+echo "---------------------------------------------------------"
+# Task 2
+sudo apt update
+echo "---------------------------------------------------------"
+${SETCOLOR_SUCCESS}; printf "[LOG] Task 2: "; ${SETCOLOR_NORMAL}; echo "The system has been updated."
+echo "---------------------------------------------------------"
+# Task 3
+echo "---------------------------------------------------------"
+check_apache2
+echo "---------------------------------------------------------"
+# Task 4
+sudo apt install python3 -y
+echo "---------------------------------------------------------"
+${SETCOLOR_SUCCESS}; printf "[LOG] Task 4: "; ${SETCOLOR_NORMAL}; echo "Python3 is installed."; ${SETCOLOR_NORMAL}
+echo "---------------------------------------------------------"
+# Task 5
+check_ssh
+echo "---------------------------------------------------------"
+# Task 6
+gen_pass
+# Task 7
+${SETCOLOR_SUCCESS}; printf "[LOG] Task 7: "; ${SETCOLOR_NORMAL}; echo "List of network interfaces."; ${SETCOLOR_NORMAL}
+ip a
+echo "---------------------------------------------------------"
+# Task 8
+${SETCOLOR_SUCCESS}; printf "[LOG] Task 8: "; ${SETCOLOR_NORMAL}; echo "Checking Internet access."; ${SETCOLOR_NORMAL}
+ping -c5 8.8.8.8
+echo "---------------------------------------------------------"
+# Task 9
+sudo apt install lynis -y
+echo "---------------------------------------------------------"
+${SETCOLOR_SUCCESS}; printf "[LOG] Task 9: "; ${SETCOLOR_NORMAL}; echo "Lynis is installed."; ${SETCOLOR_NORMAL}
+echo "---------------------------------------------------------"
+# Task 10
+echo "---------------------------------------------------------"
+${SETCOLOR_SUCCESS}; printf "[LOG] Task 10: "; ${SETCOLOR_NORMAL}; echo "Check Folder and disk sizes."; ${SETCOLOR_NORMAL}
+echo "---------------------------------------------------------"
+df -h
+echo "---------------------------------------------------------"
+${SETCOLOR_WARNING}; echo "Completion of script execution"; ${SETCOLOR_NORMAL}
+echo "---------------------------------------------------------"
